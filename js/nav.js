@@ -34,3 +34,12 @@ function updateNavOnLogin() {
   $navLogOut.show();
   $navUserProfile.text(`${currentUser.username}`).show();
 }
+
+function navNewStory() {
+  console.debug("navNewStory");
+  hidePageComponents();
+  
+  $("#add-stories-form").show();
+}
+
+$("#new-story-button").on("click", navNewStory);
