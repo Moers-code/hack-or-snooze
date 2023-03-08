@@ -51,6 +51,7 @@ class StoryList {
     const response = await axios({
       url: `${BASE_URL}/stories`,
       method: "GET",
+
     });
 
     // turn plain old story objects from API into instances of Story class
@@ -67,14 +68,16 @@ class StoryList {
    * Returns the new Story instance
    */
 
-  async addStory( user, {title, author, url} ) {
-    const story = {title, author, url}
-    const config = user.loginToken;
-    const res = await axios.post(`${BASE_URL}/stories`, story, config);
+  addStory = async (user, {title, author, url} ) => {
+
+    const res = await axios.post(`${BASE_URL}/stories`, {
+        token: user.loginToken,
+        story: {title, author, url}
+      });
     
     const newStory = new Story(res.data.story);
-    this.stories.append(newStory);
-    user.ownStories.append(newStory)
+    this.stories.unshift(newStory);
+    user.ownStories.unshift(newStory)
     return newStory;
   }
 }
