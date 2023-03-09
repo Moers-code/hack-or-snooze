@@ -38,8 +38,8 @@ function updateNavOnLogin() {
 function navNewStory() {
   console.debug("navNewStory");
   hidePageComponents();
-  
   $("#add-stories-form").show();
+  putStoriesOnPage();
 }
 
 $("#new-story-button").on("click", navNewStory);
