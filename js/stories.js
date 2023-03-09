@@ -56,13 +56,14 @@ async function newStorySubmission(e) {
   e.preventDefault();
   console.debug("newStorySubmission");
 
-  const storyTitle = $("#story-title").val();
-  const storyAuthor = $("#story-author").val();
-  const storyUrl = $("#story-url").val();
-  const username = currentUser.username;
+  const title = $("#story-title").val();
+  const author = $("#story-author").val();
+  const url = $("#story-url").val();
+  
   try{
-    const newOne = new Story({storyTitle, storyAuthor, storyUrl})
-    const recentStory = await storyList.addStory(currentUser, newOne);
+    const newOne =  {title, author, url};
+    const recentStory = await storyList.addStory(currentUser,
+       newOne);
     const $recentStory = generateStoryMarkup(recentStory);
     $allStoriesList.prepend($recentStory);
   } catch(err){
