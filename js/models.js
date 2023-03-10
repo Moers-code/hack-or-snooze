@@ -84,6 +84,14 @@ class StoryList {
       console.log(err)
       } 
     }
+
+    deleteStory = (user, storyId) => {
+      const token = user.loginToken;
+      axios.delete(`${BASE_URL}/stories/${storyId}`, {token});
+      this.stories.splice(this.stories.findIndex(story => story.storyId === storyId),1);
+      user.ownStories.splice(user.ownStories.findIndex(story => story.storyId === storyId),1);
+      user.favorites.splice(user.favorites.findIndex(story => story.storyId === storyId),1);
+    }
   }
 
 
@@ -219,6 +227,5 @@ class User {
     }catch(err){
       console.log(err)
     }
-    
   }
 }
