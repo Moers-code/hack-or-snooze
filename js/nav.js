@@ -40,6 +40,7 @@ function navNewStory() {
   hidePageComponents();
   $("#add-stories-form").show();
   putStoriesOnPage();
+  $("#add-stories-form").trigger('reset');
 }
 
 $("#new-story-button").on("click", navNewStory);

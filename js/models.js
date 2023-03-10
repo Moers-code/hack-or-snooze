@@ -21,9 +21,11 @@ class Story {
 
   /** Parses hostname out of URL and returns it. */
   getHostName() {
-    // UNIMPLEMENTED: complete this function!
-    // return "hostname.com";
-    return 'Get Host name Ran'
+    const parsedUrl = new URL(this.url);
+    let hostName = parsedUrl.hostname;
+    hostName = hostName.replace(/^www\./i, '');
+    return hostName;
+    
   }
 }
 
@@ -66,12 +68,15 @@ class StoryList {
   addStory = async (user, {title, author, url} ) => {
     const token = user.loginToken;
 
+    console.log('Request:', {token, story: {title, author, url}});
+
     try{
-      const res = await axios.post(`${BASE_URL}/stories`, {
-        token,
-        story: {title, author, url}
+      const res = await axios.post(`${BASE_URL}/stories`,
+        {token, story: {title, author, url}
       });
 
+      console.log('response: ', res.data);
+      
       const newStory = new Story(res.data.story);
       this.stories.unshift(newStory);
       user.ownStories.unshift(newStory)
@@ -82,7 +87,21 @@ class StoryList {
     }
     
   }
-}
+  // async addStory(user, { title, author, url }) {
+  //   const token = user.loginToken;
+  //   const response = await axios({
+  //     method: "POST",
+  //     url: `${BASE_URL}/stories`,
+  //     data: { token, story: { title, author, url } },
+  //   });
+
+  //   const story = new Story(response.data.story);
+  //   this.stories.unshift(story);
+  //   user.ownStories.unshift(story);
+
+  //   return story;
+  }
+
 
 
 /******************************************************************************
