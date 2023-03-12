@@ -48,7 +48,6 @@ function putStoriesOnPage() {
     const $story = generateStoryMarkup(story);
     $allStoriesList.append($story);
   }
-
   $allStoriesList.show();
 }
 
@@ -56,6 +55,8 @@ function putStoriesOnPage() {
 async function newStorySubmission(e) {
   e.preventDefault();
   console.debug("newStorySubmission");
+
+  navNewStory();
 
   const title = $("#story-title").val();
   const author = $("#story-author").val();
@@ -67,24 +68,24 @@ async function newStorySubmission(e) {
        newOne);
     const $recentStory = generateStoryMarkup(recentStory);
     $allStoriesList.prepend($recentStory);
+    putStoriesOnPage();
   } catch(err){
     console.log(err)
   }
-  
-  navNewStory();
-  console.log('newStorySubmission Executed')
+  $("#add-stories-form").fadeOut(600, () => {
+    $(this).trigger('reset');
+    $(this).hide();
+})
 }
 
 $("#add-stories-form").on("submit", newStorySubmission);
 
 $("ol").on('click', e => {
   $(document).ready(()=> {
-    console.log(currentUser.favorites)
     const favoriteStoryId = $(e.target).parent().attr('id')
     if(e.target.tagName === 'I' && currentUser){
       currentUser.favoriteStory(favoriteStoryId)
-      $(e.target).toggleClass('fa-solid')
-      console.log(currentUser.favorites)
+      $(e.target).toggleClass('fa-solid'); 
     }
   })
 })
