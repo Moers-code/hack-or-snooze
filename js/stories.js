@@ -25,6 +25,7 @@ function generateStoryMarkup(story) {
   const hostName = story.getHostName();
   return $(`
       <li id="${story.storyId}">
+        <i class="fa-regular fa-star "></i>
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
@@ -75,3 +76,15 @@ async function newStorySubmission(e) {
 }
 
 $("#add-stories-form").on("submit", newStorySubmission);
+
+$("ol").on('click', e => {
+  $(document).ready(()=> {
+    console.log(currentUser.favorites)
+    const favoriteStoryId = $(e.target).parent().attr('id')
+    if(e.target.tagName === 'I' && currentUser){
+      currentUser.favoriteStory(favoriteStoryId)
+      $(e.target).toggleClass('fa-solid')
+      console.log(currentUser.favorites)
+    }
+  })
+})
