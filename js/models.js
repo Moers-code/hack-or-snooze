@@ -86,7 +86,7 @@ class StoryList {
 
     deleteStory = (user, storyId) => {
       const token = user.loginToken;
-      axios.delete(`${BASE_URL}/stories/${storyId}`, {token});// solve this axios delete
+      axios.delete(`${BASE_URL}/stories/${storyId}`, {data: {token}});// solve this axios delete
       this.stories.splice(this.stories.findIndex(story => story.storyId === storyId),1);
       user.ownStories.splice(user.ownStories.findIndex(story => story.storyId === storyId),1);
       user.favorites.splice(user.favorites.findIndex(story => story.storyId === storyId),1);
@@ -228,12 +228,8 @@ class User {
           await axios.delete(`${BASE_URL}/users/${this.username}/favorites/${storyid}`, {data: {token}});
         }
           
-          
     }catch(err){
       console.log(err)
       }
-
-  // Allow logged in users to see a separate list of favorited stories.
-  // }
 }
 }
