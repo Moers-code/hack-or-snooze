@@ -54,7 +54,6 @@ class StoryList {
     const response = await axios({
       url: `${BASE_URL}/stories`,
       method: "GET",
-
     });
 
     // turn plain old story objects from API into instances of Story class
@@ -87,7 +86,7 @@ class StoryList {
 
     deleteStory = (user, storyId) => {
       const token = user.loginToken;
-      axios.delete(`${BASE_URL}/stories/${storyId}`, {token});
+      axios.delete(`${BASE_URL}/stories/${storyId}`, {token});// solve this axios delete
       this.stories.splice(this.stories.findIndex(story => story.storyId === storyId),1);
       user.ownStories.splice(user.ownStories.findIndex(story => story.storyId === storyId),1);
       user.favorites.splice(user.favorites.findIndex(story => story.storyId === storyId),1);
@@ -212,20 +211,6 @@ class User {
       return null;
     }
   }
-  // async _addOrRemoveFavorite(newState, story) {
-  //   const method = newState === "add" ? "POST" : "DELETE";
-  //   const token = this.loginToken;
-  //   await axios({
-  //     url: `${BASE_URL}/users/${this.username}/favorites/${story.storyId}`,
-  //     method: method,
-  //     data: { token },
-  //   });
-  // }
-
-  // /** Return true/false if given Story instance is a favorite of this user. */
-
-  // isFavorite(story) {
-  //   return this.favorites.some(s => (s.storyId === story.storyId));
 
   async favoriteStory(storyid) {
     const storyList = await StoryList.getStories();
@@ -240,12 +225,7 @@ class User {
           await axios.post(`${BASE_URL}/users/${this.username}/favorites/${storyid}`, {token});
         } else{
           this.favorites.splice(faveStoryIndex, 1);
-          // await axios({
-          //   url: `${BASE_URL}/users/${this.username}/favorites/${storyid}`,
-          //   method: "DELETE",
-          //   data: { token },
-          // });
-          await axios.delete(`${BASE_URL}/users/${this.username}/favorites/${storyid}`, {data: {token}}); //Didnt work out.. why??
+          await axios.delete(`${BASE_URL}/users/${this.username}/favorites/${storyid}`, {data: {token}});
         }
           
           

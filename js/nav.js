@@ -44,3 +44,20 @@ function navNewStory() {
 }
 
 $("#new-story-button").on("click", navNewStory);
+
+function navFavorites(e) {
+  console.debug("navFavorites");
+  hidePageComponents();
+  $allStoriesList.empty();
+  putFavoritesOnPage();
+}
+$("#nav-favorites").on('click', navFavorites);
+
+function navMyStories() {
+	console.debug('navMyStories');
+	hidePageComponents();
+	$allStoriesList.empty();
+	putOwnStoriesOnPage();
+}
+
+$("#nav-my-stories").on('click', navMyStories)

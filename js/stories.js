@@ -20,7 +20,7 @@ async function getAndShowStoriesOnStart() {
  */
 
 function generateStoryMarkup(story) {
-  // console.debug("generateStoryMarkup", story);
+//   console.debug("generateStoryMarkup", story);
 
   const hostName = story.getHostName();
   return $(`
@@ -36,6 +36,7 @@ function generateStoryMarkup(story) {
     `);
 }
 
+
 /** Gets list of stories from server, generates their HTML, and puts on page. */
 
 function putStoriesOnPage() {
@@ -46,11 +47,26 @@ function putStoriesOnPage() {
   // loop through all of our stories and generate HTML for them
   for (let story of storyList.stories) {
     const $story = generateStoryMarkup(story);
+	rememberFavorites($story);
     $allStoriesList.append($story);
   }
   $allStoriesList.show();
 }
 
+function putFavoritesOnPage() {
+  console.debug('putFavoritesOnPage');
+
+  if(currentUser.favorites.length > 0){
+    for(let favorite of currentUser.favorites){
+      const $favorite = generateStoryMarkup(favorite);
+	  rememberFavorites($favorite);
+      $allStoriesList.append($favorite);
+    }  
+  }else{
+    $allStoriesList.append($("<h3>You Don't Have Favorites Yet!!</h3>"))
+  }
+  $allStoriesList.show();
+}
 
 async function newStorySubmission(e) {
   e.preventDefault();
@@ -85,7 +101,32 @@ $("ol").on('click', e => {
     const favoriteStoryId = $(e.target).parent().attr('id')
     if(e.target.tagName === 'I' && currentUser){
       currentUser.favoriteStory(favoriteStoryId)
-      $(e.target).toggleClass('fa-solid'); 
+      $(e.target).toggleClass('fa-solid');
+      $(e.target).parent().toggleClass('checked');
     }
   })
-})
+});
+
+function putOwnStoriesOnPage() {
+    if(currentUser.ownStories.length > 0){
+        for(let myStory of currentUser.ownStories){
+            let $myStory = generateStoryMarkup(myStory);
+			rememberFavorites($myStory);
+            $allStoriesList.append($myStory);
+        }
+    } else {
+        $allStoriesList.append($("<h3>You Don't Have Stories Yet!!</h3>"))
+    }
+    $allStoriesList.show();
+}
+
+function rememberFavorites(storyElement) {
+  	console.debug('rememberFavorites');
+
+    for (let favorite of currentUser.favorites){
+        if (storyElement.attr('id') === favorite.storyId){
+        	storyElement.children('i').toggleClass('fa-solid');
+        }
+    }
+}
+
