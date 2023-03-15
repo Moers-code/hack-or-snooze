@@ -32,8 +32,24 @@
 
 .story-author {
   margin-left: 2em;
+  color: rgb(34, 146, 34);
+  padding-top: 5px;
 }
 
 .story-user {
   display: block;
+  color: orange;
+  position: relative;
+  left: 20px;
+  padding-top: 5px;
 }
+
+.small-div{
+    display: flex;
+    flex-direction: column;
+}
+
+.fa-star{
+  padding-left: 3px;
+}
+

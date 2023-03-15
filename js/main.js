@@ -13,6 +13,7 @@ const $addStoriesForm = $("#add-stories-form")
 const $navLogin = $("#nav-login");
 const $navUserProfile = $("#nav-user-profile");
 const $navLogOut = $("#nav-logout");
+const $navLinks = $(".logged-in");
 
 /** To make it easier for individual components to show just themselves, this
  * is a useful function that hides pretty much everything on the page. After
@@ -37,7 +38,7 @@ async function start() {
   // "Remember logged-in user" and log in, if credentials in localStorage
   await checkForRememberedUser();
   await getAndShowStoriesOnStart();
-
+  $navLinks.hide();
   // if we got a logged-in user
   if (currentUser) updateUIOnUserLogin();
 }

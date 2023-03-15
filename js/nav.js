@@ -29,11 +29,15 @@ $navLogin.on("click", navLoginClick);
 
 function updateNavOnLogin() {
   console.debug("updateNavOnLogin");
+  
   $(".main-nav-links").show();
+  console.log($(".main-nav-links"))
   $navLogin.hide();
   $navLogOut.show();
   $navUserProfile.text(`${currentUser.username}`).show();
-}
+  $navLinks.show();
+  }
+
 
 function navNewStory() {
 	if(currentUser){
