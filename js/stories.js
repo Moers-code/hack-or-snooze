@@ -21,7 +21,6 @@ async function getAndShowStoriesOnStart() {
 
 function generateStoryMarkup(story) {
 //   console.debug("generateStoryMarkup", story);
-
   const hostName = story.getHostName();
   return $(`
       <li id="${story.storyId}">
@@ -40,11 +39,8 @@ function generateStoryMarkup(story) {
 /** Gets list of stories from server, generates their HTML, and puts on page. */
 
 function putStoriesOnPage() {
-  console.debug("putStoriesOnPage");
-
-  $allStoriesList.empty();
-
-  // loop through all of our stories and generate HTML for them
+	console.debug("putStoriesOnPage");
+  	$allStoriesList.empty();
 	for (let story of storyList.stories) {
 		const $story = generateStoryMarkup(story);
 		rememberFavorites($story);
@@ -55,23 +51,22 @@ function putStoriesOnPage() {
 
 function putFavoritesOnPage() {
 	console.debug('putFavoritesOnPage');
-
 	if(currentUser.favorites.length > 0){
 		for(let favorite of currentUser.favorites){
 		const $favorite = generateStoryMarkup(favorite);
 		$favorite.addClass('checked');
-	  	rememberFavorites($favorite);
-      	$allStoriesList.append($favorite);
-    	}  
-  	}else{
-    	$allStoriesList.append($("<h3>You Don't Have Favorites Yet!!</h3>"))
- 	}
-  	$allStoriesList.show();
+		rememberFavorites($favorite);
+		$allStoriesList.append($favorite);
+		}  
+	}else{
+		$allStoriesList.append($("<h3>You Don't Have Favorites Yet!!</h3>"))
+	}
+	$allStoriesList.show();
 }
 
 function removeFavoriteFromPage(e) {
-	console.debug('removeFavoriteFromPage');
-	if($(e.target).hasClass('fa-star') && $(e.target).parent().hasClass('checked')){
+	if($(e.target).hasClass('fa-star fa-solid') && $(e.target).parent().hasClass('checked')){
+		console.debug('removeFavoriteFromPage');
 		$(e.target).parent().remove();
 		if($allStoriesList.children().length === 0){
 			$allStoriesList.append($("<h3>You Don't Have Favorites Yet!!</h3>"))
@@ -82,61 +77,81 @@ function removeFavoriteFromPage(e) {
 $('ol').on('click', removeFavoriteFromPage)
 
 async function newStorySubmission(e) {
-	e.preventDefault();
 	console.debug("newStorySubmission");
 	navNewStory();
 	const title = $("#story-title").val();
 	const author = $("#story-author").val();
 	const url = $("#story-url").val();
-  
-  try{
-    const newOne =  {title, author, url};
-    const recentStory = await storyList.addStory(currentUser,newOne);
-    const $recentStory = generateStoryMarkup(recentStory);
-    $allStoriesList.prepend($recentStory);
-    putStoriesOnPage();
-  } catch(err){
-    console.log(err)
-  }
-  $("#add-stories-form").fadeOut(600, () => {
-    $(this).trigger('reset');
-    $(this).hide();
-})
+  	const newOne =  {title, author, url};
+
+  	try{	
+    	const recentStory = await storyList.addStory(currentUser,newOne);
+    	const $recentStory = generateStoryMarkup(recentStory);
+    	$allStoriesList.prepend($recentStory);
+    	putStoriesOnPage();
+  	} catch(err){
+    	console.log(err)
+  	}
 }
 
-$("#add-stories-form").on("submit", newStorySubmission);
+$("#add-stories-form").on("submit", e => {
+	e.preventDefault();
+	newStorySubmission();
+	
+	$("#add-stories-form").fadeOut(600, () => {
+		console.log($(this))
+		$("#add-stories-form").trigger('reset');
+		$("#add-stories-form").hide();
+	})
+})
 
 function putOwnStoriesOnPage() {
-    if(currentUser.ownStories.length > 0){
-        for(let myStory of currentUser.ownStories){
-            let $myStory = generateStoryMarkup(myStory);
+	if(currentUser.ownStories.length > 0){
+		for(let myStory of currentUser.ownStories){
+			let $myStory = generateStoryMarkup(myStory);
 			$myStory.prepend($('<i class="fa-regular fa-trash-can"></i>'))
 			rememberFavorites($myStory);
-            $allStoriesList.append($myStory);
-        }
-    } else {
-        $allStoriesList.append($("<h3>You Don't Have Stories Yet!!</h3>"))
-    }
-    $allStoriesList.show();
+			$allStoriesList.append($myStory);
+		}
+		} else {
+			$allStoriesList.append($("<h3>You Don't Have Stories Yet!!</h3>"))
+		}
+		$allStoriesList.show();
 }
 
-function rememberFavorites(storyElement) {
-  	console.debug('rememberFavorites');
+async function removeStoryFromPage(e) {
+	if($(e.target).hasClass('fa-trash-can')){
+		const storyId = ($(e.target).parent().attr('id'));
+		
+		try{
+			await storyList.deleteStory(storyId);
+		}catch(err){
+			console.log(err)
+		}
+		$(e.target).parent().remove();
+		$(`#${storyId}`).remove();
+	}
+}
 
-    for (let favorite of currentUser.favorites){
-        if (storyElement.attr('id') === favorite.storyId){
-        	storyElement.children('.fa-star').toggleClass('fa-solid');
-        }
-    }
+$('ol').on('click', removeStoryFromPage);
+
+function rememberFavorites(storyElement) {
+	if(currentUser){
+		console.debug('rememberFavorites');
+		for (let favorite of currentUser.favorites){
+			if (storyElement.attr('id') === favorite.storyId){
+				storyElement.children('.fa-star').toggleClass('fa-solid');
+				}
+			}
+		}	
 }
 
 $("ol").on('click', e => {
 	$(document).ready(()=> {
 	  const favoriteStoryId = $(e.target).parent().attr('id')
-	  if(e.target.tagName === 'I' && currentUser){
+	  if($(e.target).hasClass('fa-star') && currentUser){
 		currentUser.favoriteStory(favoriteStoryId)
 		$(e.target).toggleClass('fa-solid');
-		
 	  }
 	})
   });

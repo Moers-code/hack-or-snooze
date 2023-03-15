@@ -71,8 +71,6 @@ class StoryList {
       const res = await axios.post(`${BASE_URL}/stories`,
         {token, story: {title, author, url}
       });
-
-      console.log('response: ', res.data);
       
       const newStory = new Story(res.data.story);
       this.stories.unshift(newStory);
@@ -84,14 +82,19 @@ class StoryList {
       } 
     }
 
-    deleteStory = (user, storyId) => {
-      const token = user.loginToken;
-      axios.delete(`${BASE_URL}/stories/${storyId}`, {data: {token}});// solve this axios delete
+    deleteStory = async (storyId) => {
+      const token = currentUser.loginToken;
+      const storyArr = await StoryList.getStories();
+      if(storyArr.length < 1) return;
+     
+      try {
+        await axios.delete(`${BASE_URL}/stories/${storyId}`, {data: {token}});
+      }catch(err){
+        console.log(err)
+      }
       this.stories.splice(this.stories.findIndex(story => story.storyId === storyId),1);
-      user.ownStories.splice(user.ownStories.findIndex(story => story.storyId === storyId),1);
-      user.favorites.splice(user.favorites.findIndex(story => story.storyId === storyId),1);
-
-      //need to remove it from the DOM
+      currentUser.ownStories.splice(currentUser.ownStories.findIndex(story => story.storyId === storyId),1);
+      currentUser.favorites.splice(currentUser.favorites.findIndex(story => story.storyId === storyId),1);
     }
   }
 

@@ -36,28 +36,34 @@ function updateNavOnLogin() {
 }
 
 function navNewStory() {
-  console.debug("navNewStory");
-  hidePageComponents();
-  $("#add-stories-form").show();
-  putStoriesOnPage();
-  
+	if(currentUser){
+		console.debug("navNewStory");
+  		hidePageComponents();
+  		$("#add-stories-form").show();
+  		putStoriesOnPage();
+	}
 }
 
 $("#new-story-button").on("click", navNewStory);
 
 function navFavorites(e) {
-  console.debug("navFavorites");
-  hidePageComponents();
-  $allStoriesList.empty();
-  putFavoritesOnPage();
+	if(currentUser){
+  		console.debug("navFavorites");
+  		hidePageComponents();
+  		$allStoriesList.empty();
+  		putFavoritesOnPage();
+	}
 }
+
 $("#nav-favorites").on('click', navFavorites);
 
 function navMyStories() {
-	console.debug('navMyStories');
-	hidePageComponents();
-	$allStoriesList.empty();
-	putOwnStoriesOnPage();
+	if(currentUser){
+		console.debug('navMyStories');
+		hidePageComponents();
+		$allStoriesList.empty();
+		putOwnStoriesOnPage();
+	}
 }
 
 $("#nav-my-stories").on('click', navMyStories)
